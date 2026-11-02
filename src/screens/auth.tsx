@@ -50,6 +50,7 @@ export function WelcomeScreen() {
       </div>
 
       <div className="welcome-center">
+        <h1 className="sr-only">CampuSmart — Your Campus, Your Marketplace</h1>
         <div className="welcome-logo-wrap">
           <img
             className="welcome-logo"
