@@ -1,0 +1,10 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+const c = await b.newContext({ viewport: { width: 1200, height: 1000 } });
+const p = await c.newPage();
+await p.goto('http://127.0.0.1:5173/', { waitUntil: 'networkidle' });
+await p.getByRole('button', { name: /already have an account/i }).click();
+await p.waitForTimeout(500);
+await p.screenshot({ path: 'C:/Users/Kaira/AppData/Local/Temp/opencode/shots/02-login.png' });
+console.log(await p.evaluate(() => ({ scroll: document.querySelector('.app-scroll')?.scrollHeight, client: document.querySelector('.app-scroll')?.clientHeight })));
+await b.close();

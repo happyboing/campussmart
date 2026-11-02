@@ -1,0 +1,20 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+const c = await b.newContext({ viewport: { width: 430, height: 900 } });
+const p = await c.newPage();
+const errors = [];
+p.on('pageerror', e => errors.push(e.message));
+p.on('console', m => { if (m.type()==='error') errors.push(m.text()); });
+await p.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+console.log('title', await p.title());
+console.log('manifest', await p.evaluate(() => document.querySelector('link[rel=manifest]')?.getAttribute('href')));
+console.log('sw', await p.evaluate(async () => {
+  if (!('serviceWorker' in navigator)) return 'no-sw';
+  const reg = await navigator.serviceWorker.ready;
+  return reg.active ? 'active:' + reg.scope : 'no-active';
+}));
+console.log('has welcome', await p.getByRole('button', { name: /Create a free account/i }).count());
+console.log('errors', errors);
+await p.screenshot({ path: 'C:/Users/Kaira/AppData/Local/Temp/opencode/shots/24-prod-welcome.png' });
+await b.close();

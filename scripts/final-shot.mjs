@@ -1,0 +1,10 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+const c = await b.newContext({ viewport: { width: 1200, height: 1000 } });
+const p = await c.newPage();
+const errors=[]; p.on('pageerror',e=>errors.push(e.message)); p.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await p.goto('http://127.0.0.1:5173/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(900);
+await p.screenshot({ path: 'C:/Users/Kaira/AppData/Local/Temp/opencode/shots/32-final-welcome.png' });
+console.log('errors', errors);
+await b.close();
